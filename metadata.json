@@ -1,0 +1,6 @@
+{
+  "name": "Spotify Sunda - Pamuter Musik & Lirik",
+  "description": "Aplikasi streaming musik pamuter lagu kalayan antarmuka Basa Sunda, lirik otomatis, mode offline, palurukan online, sareng sinkronisasi daptar puter ka awan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
