@@ -108,7 +108,7 @@ export function TrackTable({
                   alt={song.title}
                   className="w-10 h-10 rounded-md object-cover shrink-0 bg-neutral-900 border border-neutral-800"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/images/pop_sunda.jpg';
+                    (e.target as HTMLImageElement).src = '/images/sound_kane_cover.jpg';
                   }}
                 />
                 <div className="overflow-hidden">
@@ -162,7 +162,7 @@ export function TrackTable({
                 {/* Like Button */}
                 <button
                   onClick={() => onToggleLike(song.id)}
-                  title="Pikaresep"
+                  title={isLiked ? (lang === 'en' ? 'Unlike' : 'Hapus dari disukai') : (lang === 'en' ? 'Like' : 'Sukai')}
                   className={`p-1.5 rounded-full transition-opacity ${
                     isLiked
                       ? 'text-[#1DB954] opacity-100'

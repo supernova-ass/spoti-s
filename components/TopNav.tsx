@@ -51,6 +51,9 @@ export function TopNav({
   const t = translations[lang];
   const [showUserMenu, setShowUserMenu] = useState(false);
 
+  const displayAvatar =
+    currentUser?.avatar || (currentUser?.role === 'developer' ? '/images/profile-dev.jpeg' : undefined);
+
   return (
     <header className="sticky top-0 z-30 h-16 bg-neutral-900/90 backdrop-blur-md px-4 md:px-8 flex items-center justify-between border-b border-neutral-800/60">
       {/* Left zone: Dynamic Island (Never shifted or broken) */}
@@ -67,7 +70,7 @@ export function TopNav({
         />
       </div>
 
-      {/* Right zone: Cloud Sync, Language Switcher, User Profile */}
+      {/* Right zone: Cloud Sync, Language Switcher (ID / EN), User Profile */}
       <div className="flex items-center gap-2.5 shrink-0">
         {/* Cloud sync status badge button */}
         <button
@@ -80,14 +83,14 @@ export function TopNav({
           <span className="whitespace-nowrap">{isSyncing ? t.syncing : t.cloudSync}</span>
         </button>
 
-        {/* Language Switcher */}
+        {/* Language Switcher: ID / EN */}
         <button
           onClick={onToggleLang}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-800/80 hover:bg-neutral-800 text-xs font-semibold text-neutral-200 hover:text-white transition-colors border border-neutral-700/50"
-          title="Gentos Basa"
+          title={lang === 'en' ? 'Ganti Bahasa: Indonesia' : 'Switch Language: English'}
         >
           <Globe className="w-3.5 h-3.5 text-[#1DB954]" />
-          <span className="uppercase text-[11px] font-bold">{lang === 'su' ? 'Sunda' : 'Indo'}</span>
+          <span className="uppercase text-[11px] font-bold tracking-wider">{lang === 'en' ? 'EN' : 'ID'}</span>
         </button>
 
         {/* User Profile & Menu */}
@@ -96,11 +99,14 @@ export function TopNav({
             onClick={() => setShowUserMenu(!showUserMenu)}
             className="flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-full bg-neutral-800 hover:bg-neutral-750 border border-neutral-700 transition-colors"
           >
-            {currentUser?.avatar ? (
+            {displayAvatar ? (
               <img
-                src={currentUser.avatar}
-                alt={currentUser.name}
-                className="w-7 h-7 rounded-full object-cover border border-emerald-500/30"
+                src={displayAvatar}
+                alt={currentUser?.name || 'User'}
+                className="w-7 h-7 rounded-full object-cover border border-emerald-500/40"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/profile-dev.jpeg';
+                }}
               />
             ) : (
               <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#1DB954] to-emerald-400 text-black flex items-center justify-center font-bold text-xs">
@@ -108,7 +114,7 @@ export function TopNav({
               </div>
             )}
             <span className="text-xs font-bold text-neutral-200 hidden md:inline max-w-[100px] truncate">
-              {currentUser?.name || 'Pamaké'}
+              {currentUser?.name || (lang === 'en' ? 'User' : 'Pengguna')}
             </span>
             {currentUser?.role === 'developer' && (
               <span className="hidden sm:inline bg-[#1DB954] text-black text-[9px] font-black px-1.5 py-0.5 rounded uppercase">
@@ -123,19 +129,20 @@ export function TopNav({
             <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-neutral-900 border border-neutral-800 shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
               <div className="px-3 py-2 border-b border-neutral-800 mb-1">
                 <div className="text-xs font-bold text-white flex items-center gap-1.5 truncate">
-                  <span>{currentUser?.name || 'Pamaké SpotiS'}</span>
+                  <span>{currentUser?.name || 'Pengguna SpotiS'}</span>
                   {currentUser?.role === 'developer' && (
-                    <span className="bg-[#1DB954] text-black text-[9px] font-black px-1 py-0.2 rounded">
+                    <span className="bg-[#1DB954] text-black text-[9px] font-black px-1.5 py-0.5 rounded">
                       DEV
                     </span>
                   )}
                 </div>
                 <div className="text-[11px] font-mono text-neutral-400 truncate">
-                  {currentUser?.email || 'pake@spotis.user'}
+                  {currentUser?.email || 'user@spotis.com'}
                 </div>
                 {currentUser?.birthDate && (
-                  <div className="text-[10px] text-neutral-500 mt-0.5">
-                    Kelahiran: {currentUser.birthDate}
+                  <div className="text-[10px] text-neutral-400 mt-1 flex items-center gap-1">
+                    <span>{lang === 'en' ? 'Birthdate:' : 'Kelahiran:'}</span>
+                    <span className="font-mono text-neutral-200">{currentUser.birthDate}</span>
                   </div>
                 )}
               </div>
@@ -149,7 +156,7 @@ export function TopNav({
                   className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-red-400 hover:text-white hover:bg-red-950/40 transition-colors"
                 >
                   <LogOut className="w-3.5 h-3.5" />
-                  <span>Kaluar tina Akun</span>
+                  <span>{lang === 'en' ? 'Log Out' : 'Keluar dari Akun'}</span>
                 </button>
               )}
             </div>

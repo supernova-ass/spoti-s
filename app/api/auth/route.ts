@@ -7,10 +7,10 @@ const DEV_ACCOUNT: UserAccount = {
   name: 'fzpedia',
   email: 'fzpedia@dev.id',
   password: 'dev',
-  birthDate: '1998-01-01',
+  birthDate: '2008-08-08',
   role: 'developer',
-  avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-  favoriteGenres: ['DJ & Remix', 'Pop', 'Hip-Hop & Rap', 'EDM & Club', 'Rock'],
+  avatar: '/images/profile-dev.jpeg',
+  favoriteGenres: ['DJ & Remix', 'Pop Hits', 'Hip-Hop & Rap', 'EDM & Club', 'Rock & Metal'],
   createdAt: new Date().toISOString(),
 };
 
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     if (action === 'dev-login') {
       const dev = { ...DEV_ACCOUNT };
       delete dev.password;
-      return NextResponse.json({ success: true, user: dev, message: 'Wilujeng sumping Developer fzpedia!' });
+      return NextResponse.json({ success: true, user: dev, message: 'Selamat datang, Developer fzpedia!' });
     }
 
     if (action === 'social-login') {
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
 
     if (action === 'register') {
       if (!name || !password) {
-        return NextResponse.json({ success: false, error: 'Nami sareng kecap konci kedah dieusian!' }, { status: 400 });
+        return NextResponse.json({ success: false, error: 'Nama dan kata sandi wajib diisi!' }, { status: 400 });
       }
 
       // Generate clean email or use provided
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
 
       if (userDatabase[key]) {
         return NextResponse.json(
-          { success: false, error: 'Nami / Email ieu parantos kadaptar. Mangga lebet langsung!' },
+          { success: false, error: 'Nama / Email ini sudah terdaftar. Silakan langsung masuk!' },
           { status: 409 }
         );
       }
@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
         password: password,
         birthDate: birthDate || '',
         role: accountEmail === 'fzpedia@dev.id' ? 'developer' : 'user',
-        avatar: `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(name)}`,
+        avatar: accountEmail === 'fzpedia@dev.id' ? '/images/profile-dev.jpeg' : `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(name)}`,
         favoriteGenres: [],
         createdAt: new Date().toISOString(),
       };
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: true,
         user: safeUser,
-        message: 'Akun parantos hasil kadaptar! Mangga lebet nganggo akun anjeun.',
+        message: 'Akun berhasil terdaftar! Silakan masuk menggunakan nama dan kata sandi Anda.',
       });
     }
 
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
       if (lookup === 'fzpedia@dev.id' || lookup === 'fzpedia') {
         const dev = { ...DEV_ACCOUNT };
         delete dev.password;
-        return NextResponse.json({ success: true, user: dev, message: 'Masuk salaku Developer hasil!' });
+        return NextResponse.json({ success: true, user: dev, message: 'Masuk sebagai Developer berhasil!' });
       }
 
       // Check existing accounts by email or name
@@ -133,21 +133,21 @@ export async function POST(req: NextRequest) {
 
       if (!foundUser) {
         return NextResponse.json(
-          { success: false, error: 'Akun henteu kapendak! Mangga daftar heula.' },
+          { success: false, error: 'Akun tidak ditemukan! Silakan daftar terlebih dahulu.' },
           { status: 404 }
         );
       }
 
       if (foundUser.password && password && foundUser.password !== password) {
         return NextResponse.json(
-          { success: false, error: 'Kecap konci lepat! Mangga parios deui.' },
+          { success: false, error: 'Kata sandi salah! Silakan periksa kembali.' },
           { status: 401 }
         );
       }
 
       const safeUser = { ...foundUser };
       delete safeUser.password;
-      return NextResponse.json({ success: true, user: safeUser, message: 'Lebet hasil!' });
+      return NextResponse.json({ success: true, user: safeUser, message: 'Berhasil masuk!' });
     }
 
     if (action === 'update-genres') {
@@ -158,10 +158,10 @@ export async function POST(req: NextRequest) {
         delete safeUser.password;
         return NextResponse.json({ success: true, user: safeUser });
       }
-      return NextResponse.json({ success: false, error: 'Panganggo henteu kapendak' }, { status: 404 });
+      return NextResponse.json({ success: false, error: 'Pengguna tidak ditemukan' }, { status: 404 });
     }
 
-    return NextResponse.json({ success: false, error: 'Aksi teu dikenal' }, { status: 400 });
+    return NextResponse.json({ success: false, error: 'Aksi tidak dikenal' }, { status: 400 });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Internal Server Error';
     return NextResponse.json({ success: false, error: message }, { status: 500 });

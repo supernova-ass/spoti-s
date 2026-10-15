@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { X, Play, Music, ListMusic } from 'lucide-react';
+import { X, ListMusic } from 'lucide-react';
 import { Song } from '@/lib/types';
 import { Language, translations } from '@/lib/i18n';
 
@@ -48,7 +48,7 @@ export function QueueDrawer({
         {currentSong && (
           <div>
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider block mb-2">
-              Keur Disetel
+              {t.playingNow}
             </span>
             <div className="flex items-center gap-3 p-2.5 rounded-xl bg-neutral-900 border border-neutral-800">
               <img
@@ -56,7 +56,7 @@ export function QueueDrawer({
                 alt={currentSong.title}
                 className="w-11 h-11 rounded-lg object-cover shrink-0"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/images/pop_sunda.jpg';
+                  (e.target as HTMLImageElement).src = '/images/sound_kane_cover.jpg';
                 }}
               />
               <div className="overflow-hidden min-w-0">
@@ -73,14 +73,14 @@ export function QueueDrawer({
         <div>
           <div className="flex items-center justify-between mb-2">
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
-              Antrian Saterusna ({queue.length})
+              {lang === 'en' ? 'Next in Queue' : 'Antrean Berikutnya'} ({queue.length})
             </span>
             {queue.length > 0 && (
               <button
                 onClick={onClearQueue}
                 className="text-[10px] text-neutral-400 hover:text-white"
               >
-                Kosongkeun
+                {lang === 'en' ? 'Clear' : 'Kosongkan'}
               </button>
             )}
           </div>
@@ -98,7 +98,7 @@ export function QueueDrawer({
                     alt={song.title}
                     className="w-9 h-9 rounded object-cover shrink-0"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/images/pop_sunda.jpg';
+                      (e.target as HTMLImageElement).src = '/images/sound_kane_cover.jpg';
                     }}
                   />
                   <div className="overflow-hidden flex-1 min-w-0">
@@ -112,7 +112,7 @@ export function QueueDrawer({
             </div>
           ) : (
             <p className="text-xs text-neutral-500 py-4 text-center">
-              Taya lagu dina antrian.
+              {lang === 'en' ? 'No songs in queue.' : 'Tidak ada lagu dalam antrean.'}
             </p>
           )}
         </div>

@@ -51,17 +51,17 @@ export function LikedSongsView({
 
           <div className="flex-1 text-center sm:text-left overflow-hidden">
             <span className="text-xs font-bold uppercase tracking-wider text-neutral-300">
-              Koleksi Anjeun
+              {t.yourLibrary}
             </span>
             <h1 className="text-3xl sm:text-5xl font-black text-white mt-1 mb-2 tracking-tight">
               {t.likedSongs}
             </h1>
             <div className="flex items-center justify-center sm:justify-start gap-2 text-xs font-medium text-neutral-300">
-              <span className="font-bold text-white">Urang Sunda</span>
+              <span className="font-bold text-white">SpotiS</span>
               <span>·</span>
-              <span>{likedSongs.length} lagu</span>
+              <span>{likedSongs.length} {lang === 'en' ? 'songs' : 'lagu'}</span>
               <span>·</span>
-              <span>{minutes} menit</span>
+              <span>{minutes} {lang === 'en' ? 'mins' : 'menit'}</span>
             </div>
           </div>
         </div>
@@ -102,9 +102,13 @@ export function LikedSongsView({
         ) : (
           <div className="py-20 text-center text-neutral-400">
             <Music className="w-12 h-12 mx-auto mb-3 text-neutral-600" />
-            <p className="text-base font-semibold text-white">Can aya lagu anu dipikaresep</p>
+            <p className="text-base font-semibold text-white">
+              {lang === 'en' ? 'No liked songs yet' : 'Belum ada lagu yang disukai'}
+            </p>
             <p className="text-xs text-neutral-500 mt-1">
-              Pencét tanda jantung dina lagu mana waé pikeun nambahkeun ka dieu.
+              {lang === 'en'
+                ? 'Click the heart icon on any track to add it to your collection.'
+                : 'Klik ikon hati pada lagu apa pun untuk menambahkannya ke koleksi ini.'}
             </p>
           </div>
         )}

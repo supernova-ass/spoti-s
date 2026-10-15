@@ -18,7 +18,7 @@ import {
   triggerFileDownload,
 } from '@/lib/lyrics-storage';
 import { Song } from '@/lib/types';
-import { SUNDA_SONGS } from '@/lib/sunda-songs';
+import { ALL_SONGS } from '@/lib/sunda-songs';
 
 interface OfflineLyricsViewProps {
   offlineLyrics: SavedOfflineLyric[];
@@ -58,13 +58,13 @@ export function OfflineLyricsView({
   };
 
   const handleExportLrc = (item: SavedOfflineLyric) => {
-    const filename = `${item.title.toLowerCase().replace(/[^a-z0-9]/g, '_')}_lirik_sunda.lrc`;
+    const filename = `${item.title.toLowerCase().replace(/[^a-z0-9]/g, '_')}_lirik.lrc`;
     triggerFileDownload(filename, item.lrcContent);
   };
 
   const handlePlayFromOffline = (item: SavedOfflineLyric) => {
     // Find matching song in catalog or build from offline lyric data
-    const matched = SUNDA_SONGS.find((s) => s.id === item.songId);
+    const matched = ALL_SONGS.find((s) => s.id === item.songId);
     if (matched) {
       onPlaySong(matched);
     } else {
@@ -75,7 +75,6 @@ export function OfflineLyricsView({
         album: item.album,
         coverUrl: item.coverUrl,
         duration: 100,
-        isSundaNative: true,
         lyrics: item.lines,
       };
       onPlaySong(syntheticSong);
@@ -109,7 +108,8 @@ export function OfflineLyricsView({
 
           <div className="text-right flex items-center gap-3">
             <span className="text-xs text-neutral-400">
-              <strong className="text-white text-base">{offlineLyrics.length}</strong> lirik kasimpen
+              <strong className="text-white text-base">{offlineLyrics.length}</strong>{' '}
+              {lang === 'en' ? 'lyrics saved' : 'lirik tersimpan'}
             </span>
           </div>
         </div>
@@ -118,9 +118,13 @@ export function OfflineLyricsView({
       {offlineLyrics.length === 0 ? (
         <div className="max-w-6xl mx-auto py-20 text-center text-neutral-400 border border-dashed border-neutral-800 rounded-2xl p-8">
           <FileText className="w-12 h-12 mx-auto mb-3 text-neutral-600" />
-          <h3 className="text-lg font-bold text-white">Can aya lirik anu diunduh offline</h3>
+          <h3 className="text-lg font-bold text-white">
+            {lang === 'en' ? 'No lyrics saved offline yet' : 'Belum ada lirik yang disimpan offline'}
+          </h3>
           <p className="text-xs text-neutral-400 mt-1 max-w-md mx-auto">
-            Buka lagu Sunda naon waé, pencét tombol &quot;Unduh Lirik (Offline)&quot; atanapi ikon unduh dina pamuter musik pikeun nyimpen lirik di dieu.
+            {lang === 'en'
+              ? 'Click the download icon on any track in the music player to save synchronized lyrics offline.'
+              : 'Klik ikon unduh pada lagu di pemutar musik untuk menyimpan lirik otomatis secara offline.'}
           </p>
         </div>
       ) : (
@@ -133,7 +137,7 @@ export function OfflineLyricsView({
                 type="text"
                 value={filterQuery}
                 onChange={(e) => setFilterQuery(e.target.value)}
-                placeholder="Saring lirik offline..."
+                placeholder={lang === 'en' ? 'Filter offline lyrics...' : 'Saring lirik offline...'}
                 className="w-full bg-neutral-900 text-white placeholder-neutral-500 text-xs rounded-xl pl-9 pr-3 py-2.5 border border-neutral-800 focus:border-[#1DB954] focus:outline-none"
               />
             </div>
@@ -157,7 +161,7 @@ export function OfflineLyricsView({
                         alt={item.title}
                         className="w-10 h-10 rounded-lg object-cover shrink-0"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/images/pop_sunda.jpg';
+                          (e.target as HTMLImageElement).src = '/images/sound_kane_cover.jpg';
                         }}
                       />
                       <div className="overflow-hidden">
@@ -183,7 +187,7 @@ export function OfflineLyricsView({
                           handleRemove(item.songId);
                         }}
                         className="p-1.5 rounded-full hover:bg-neutral-700 text-neutral-400 hover:text-red-400 transition-colors"
-                        title="Hapus lirik offline"
+                        title={lang === 'en' ? 'Delete offline lyrics' : 'Hapus lirik offline'}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -214,12 +218,16 @@ export function OfflineLyricsView({
                       }`}
                     >
                       <Languages className="w-3.5 h-3.5 text-[#1DB954]" />
-                      <span>{showTranslation ? 'Tarjamah Hurung' : 'Tarjamah Pareum'}</span>
+                      <span>
+                        {showTranslation
+                          ? (lang === 'en' ? 'Hide Meaning' : 'Sembunyikan Arti')
+                          : (lang === 'en' ? 'Show Meaning' : 'Tampilkan Arti')}
+                      </span>
                     </button>
                     <button
                       onClick={() => handleExportLrc(selectedLyric)}
                       className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-neutral-800 hover:bg-neutral-700 text-neutral-200 transition-colors border border-neutral-700"
-                      title="Unduh file .LRC ka HP/Komputer"
+                      title="Download file .LRC"
                     >
                       <Download className="w-3.5 h-3.5" />
                       <span>File .LRC</span>
@@ -227,7 +235,7 @@ export function OfflineLyricsView({
                   </div>
                 </div>
 
-                {/* Lyrics Content with Sundanese & Indonesian translation */}
+                {/* Lyrics Content with synchronized lines */}
                 <div className="flex-1 overflow-y-auto py-4 space-y-3 custom-scrollbar">
                   {selectedLyric.lines && selectedLyric.lines.length > 0 ? (
                     selectedLyric.lines.map((line, idx) => (
@@ -256,20 +264,23 @@ export function OfflineLyricsView({
                 <div className="pt-3 border-t border-neutral-800 flex items-center justify-between text-[11px] text-neutral-500">
                   <span className="flex items-center gap-1 text-[#1DB954]">
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>Diunduh: {new Date(selectedLyric.downloadedAt).toLocaleDateString()}</span>
+                    <span>
+                      {lang === 'en' ? 'Downloaded:' : 'Diunduh:'}{' '}
+                      {new Date(selectedLyric.downloadedAt).toLocaleDateString()}
+                    </span>
                   </span>
                   <button
                     onClick={() => handlePlayFromOffline(selectedLyric)}
                     className="font-bold text-white hover:text-[#1DB954] transition-colors flex items-center gap-1"
                   >
                     <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>Setel Lagu Ieu</span>
+                    <span>{lang === 'en' ? 'Play This Song' : 'Putar Lagu Ini'}</span>
                   </button>
                 </div>
               </div>
             ) : (
               <div className="h-full flex items-center justify-center text-neutral-500">
-                Pilih lirik ti daptar gigir pikeun maca.
+                {lang === 'en' ? 'Select a lyric from the left list to read.' : 'Pilih lirik dari daftar di samping untuk membaca.'}
               </div>
             )}
           </div>

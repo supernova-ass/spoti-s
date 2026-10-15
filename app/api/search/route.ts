@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ALL_SONGS } from '@/lib/sunda-songs';
+import { Song } from '@/lib/types';
 
 interface ITunesResult {
   trackId: number;
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
 
   const queryLower = query.toLowerCase();
 
-  // 1. Check local catalog (Sound Kane FZEDIT + Sunda) first for instant high-relevance matches
+  // 1. Check local catalog (Sound Kane FZEDIT + Songs) first for instant high-relevance matches
   const localMatches = ALL_SONGS.filter(
     (s) =>
       s.title.toLowerCase().includes(queryLower) ||
@@ -33,13 +34,13 @@ export async function GET(request: NextRequest) {
   );
 
   // 2. Fetch from free public iTunes Search API (no API key needed, official preview audio included!)
-  let remoteTracks: typeof SUNDA_SONGS = [];
+  let remoteTracks: Song[] = [];
 
   try {
     const itunesUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=20`;
     const response = await fetch(itunesUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; SpotifySunda/1.0)',
+        'User-Agent': 'Mozilla/5.0 (compatible; SpotiS/1.0)',
       },
       next: { revalidate: 3600 },
     });
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
             // High-resolution artwork replacement (replace 100x100 with 600x600)
             const hiResCover = item.artworkUrl100
               ? item.artworkUrl100.replace('100x100bb', '600x600bb')
-              : '/images/pop_sunda.jpg';
+              : '/images/sound_kane_cover.jpg';
 
             const durationSec = Math.round((item.trackTimeMillis || 30000) / 1000);
 

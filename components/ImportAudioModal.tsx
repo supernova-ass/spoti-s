@@ -6,7 +6,6 @@ import {
   Upload,
   Link as LinkIcon,
   CheckCircle2,
-  Music,
   Trash2,
   FileAudio,
 } from 'lucide-react';
@@ -63,11 +62,18 @@ export function ImportAudioModal({
         await saveCustomAudioTrack(selectedSongId, selectedFile);
         const objUrl = URL.createObjectURL(selectedFile);
         onAudioUpdated(selectedSongId, objUrl);
-        setSuccessMsg(`Berkas MP3 asli "${selectedFile.name}" hasil diaktipkeun pikeun ${currentSong?.title}!`);
+        setSuccessMsg(
+          lang === 'en'
+            ? `Audio file "${selectedFile.name}" activated for ${currentSong?.title}!`
+            : `Berkas audio "${selectedFile.name}" berhasil diaktifkan untuk ${currentSong?.title}!`
+        );
       } else if (mode === 'url' && urlInput.trim()) {
-        // Direct URL
         onAudioUpdated(selectedSongId, urlInput.trim());
-        setSuccessMsg(`Tautan audio full album hasil diaktipkeun pikeun ${currentSong?.title}!`);
+        setSuccessMsg(
+          lang === 'en'
+            ? `Audio URL activated for ${currentSong?.title}!`
+            : `Tautan streaming audio berhasil diaktifkan untuk ${currentSong?.title}!`
+        );
       }
       setTimeout(() => {
         setSuccessMsg('');
@@ -84,7 +90,7 @@ export function ImportAudioModal({
     if (!selectedSongId) return;
     await deleteCustomAudioTrack(selectedSongId);
     onAudioUpdated(selectedSongId, null);
-    setSuccessMsg(`Dibalikkeun kana wirahma bawaan.`);
+    setSuccessMsg(lang === 'en' ? 'Reset to default audio.' : 'Dikembalikan ke audio bawaan.');
     setTimeout(() => setSuccessMsg(''), 1500);
   };
 
@@ -99,10 +105,12 @@ export function ImportAudioModal({
             </div>
             <div>
               <h3 className="text-base font-bold text-white">
-                Impor Lagu Asli (MP3 Full Album)
+                {lang === 'en' ? 'Import Audio Track (MP3)' : 'Impor Lagu Audio (MP3)'}
               </h3>
               <p className="text-xs text-neutral-400">
-                Gentos lagu kalayan rekaman audio asli atanapi tautan streaming
+                {lang === 'en'
+                  ? 'Replace track audio with custom MP3 file or streaming link'
+                  : 'Ganti lagu dengan rekaman audio MP3 atau tautan streaming'}
               </p>
             </div>
           </div>
@@ -126,7 +134,7 @@ export function ImportAudioModal({
           {/* Step 1: Select Song Target */}
           <div>
             <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
-              1. Pilih Lagu Sunda Anu Bade Digentos Ku Lagu Asli:
+              {lang === 'en' ? '1. Select Target Track:' : '1. Pilih Lagu yang Ingin Diganti:'}
             </label>
             <select
               value={selectedSongId}
@@ -135,7 +143,7 @@ export function ImportAudioModal({
             >
               {songs.map((song) => (
                 <option key={song.id} value={song.id}>
-                  {song.title} - {song.artist} ({customAudioIds.includes(song.id) ? '✓ Audio Asli Aktip' : 'Bawaan'})
+                  {song.title} - {song.artist} ({customAudioIds.includes(song.id) ? '✓ Audio Kustom' : 'Standar'})
                 </option>
               ))}
             </select>
@@ -154,7 +162,7 @@ export function ImportAudioModal({
                 }`}
               >
                 <Upload className="w-3.5 h-3.5" />
-                <span>Unggah Berkas MP3 ti HP / PC</span>
+                <span>{lang === 'en' ? 'Upload MP3 File' : 'Unggah File MP3'}</span>
               </button>
               <button
                 type="button"
@@ -166,7 +174,7 @@ export function ImportAudioModal({
                 }`}
               >
                 <LinkIcon className="w-3.5 h-3.5" />
-                <span>Tautan Audio / CDN URL</span>
+                <span>{lang === 'en' ? 'Direct Audio URL' : 'Tautan URL Audio'}</span>
               </button>
             </div>
 
@@ -185,16 +193,18 @@ export function ImportAudioModal({
                       {selectedFile.name}
                     </p>
                     <p className="text-[11px] text-neutral-400 mt-0.5">
-                      {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB · Klik pikeun ngaganti
+                      {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB · {lang === 'en' ? 'Click to change' : 'Klik untuk ganti file'}
                     </p>
                   </div>
                 ) : (
                   <div>
                     <p className="text-xs font-semibold text-white">
-                      Pencét atawa séréd berkas MP3/WAV/FLAC ka dieu
+                      {lang === 'en' ? 'Click or drag an MP3/WAV/FLAC file here' : 'Klik atau seret file audio MP3/WAV/FLAC ke sini'}
                     </p>
                     <p className="text-[11px] text-neutral-400 mt-1">
-                      Berkas bakal disimpen sacara lokal dina browser (IndexedDB) & tiasa diputer offline.
+                      {lang === 'en'
+                        ? 'Files are stored locally in the browser (IndexedDB) for offline playback.'
+                        : 'File disimpan secara lokal di browser (IndexedDB) dan bisa diputar offline.'}
                     </p>
                   </div>
                 )}
@@ -205,11 +215,11 @@ export function ImportAudioModal({
                   type="url"
                   value={urlInput}
                   onChange={(e) => setUrlInput(e.target.value)}
-                  placeholder="https://conto.com/audio/manuk_dadali_original.mp3"
+                  placeholder="https://example.com/audio/track.mp3"
                   className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#1DB954]"
                 />
                 <p className="text-[11px] text-neutral-400 mt-1">
-                  Masukkan tautan langsung (.mp3, .m4a, atau stream audio CDN).
+                  {lang === 'en' ? 'Direct link to an audio stream or file (.mp3, .m4a).' : 'Tautan langsung ke file atau stream audio (.mp3, .m4a).'}
                 </p>
               </div>
             )}
@@ -224,7 +234,7 @@ export function ImportAudioModal({
                 className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                <span>Balikkeun ka Bawaan</span>
+                <span>{lang === 'en' ? 'Reset to Default' : 'Kembalikan ke Bawaan'}</span>
               </button>
             ) : (
               <div />
@@ -243,7 +253,9 @@ export function ImportAudioModal({
                 disabled={isSaving || (mode === 'file' && !selectedFile) || (mode === 'url' && !urlInput.trim())}
                 className="px-5 py-2 rounded-full text-xs font-bold bg-[#1DB954] hover:bg-[#1ed760] text-black disabled:opacity-50 transition-colors shadow-md shadow-[#1DB954]/20"
               >
-                {isSaving ? 'Keur Nyimpen...' : 'Larapkeun Lagu Asli'}
+                {isSaving
+                  ? (lang === 'en' ? 'Saving...' : 'Menyimpan...')
+                  : (lang === 'en' ? 'Apply Audio' : 'Terapkan Audio')}
               </button>
             </div>
           </div>

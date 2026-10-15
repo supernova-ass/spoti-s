@@ -250,16 +250,22 @@ export function SearchPage({
             ) : (
               <div className="py-20 text-center text-neutral-400">
                 <Music className="w-12 h-12 mx-auto mb-3 text-neutral-600" />
-                <p className="text-base font-semibold text-white">{t.noResults} pikeun &quot;{searchQuery}&quot;</p>
+                <p className="text-base font-semibold text-white">
+                  {t.noResults} {lang === 'en' ? 'for' : 'untuk'} &quot;{searchQuery}&quot;
+                </p>
                 <p className="text-xs text-neutral-500 mt-1">
-                  Cobi nganggo kecap konci sanés sapertos judul lagu atawa nami artis.
+                  {lang === 'en'
+                    ? 'Try searching with different keywords like song title, artist, or album.'
+                    : 'Coba gunakan kata kunci lain seperti judul lagu atau nama artis.'}
                 </p>
               </div>
             )}
           </div>
         ) : (
           <div>
-            <h3 className="text-xl font-bold text-white mb-4">Jelajah Sadaya Kategori Musik</h3>
+            <h3 className="text-xl font-bold text-white mb-4">
+              {lang === 'en' ? 'Browse All Music Categories' : 'Jelajahi Semua Kategori Musik'}
+            </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
               {BROWSE_CATEGORIES.map((cat) => (
                 <div

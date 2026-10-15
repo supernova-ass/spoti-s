@@ -233,7 +233,7 @@ export function NowPlayingDrawer({
             className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-neutral-900 border border-neutral-800 hover:border-neutral-700 text-xs font-bold text-white shadow-lg transition-transform hover:scale-105"
           >
             <Mic2 className="w-4 h-4 text-[#1DB954]" />
-            <span>{t.lyrics} & Karaoke Sinkron</span>
+            <span>{t.lyrics}</span>
           </button>
         </div>
       </div>

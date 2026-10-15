@@ -87,7 +87,7 @@ export function PlayerBar({
       <footer className="h-20 bg-neutral-950 border-t border-neutral-900 px-4 flex items-center justify-between text-neutral-500 text-xs select-none">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded bg-neutral-900" />
-          <span>Pilih lagu Sunda atawa palurukan online pikeun ngamimitian musik...</span>
+          <span>{lang === 'en' ? 'Select a track or Sound Kane to start playing...' : 'Pilih lagu atau Sound Kane untuk memulai musik...'}</span>
         </div>
       </footer>
     );
@@ -102,14 +102,14 @@ export function PlayerBar({
         <div
           onClick={onExpandNowPlaying}
           className="relative group cursor-pointer shrink-0"
-          title="Tembongkeun albeum"
+          title={lang === 'en' ? 'Show album' : 'Lihat album'}
         >
           <img
             src={currentSong.coverUrl}
             alt={currentSong.title}
             className="w-14 h-14 rounded-md object-cover shadow-md bg-neutral-900 group-hover:opacity-90 transition-opacity"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = '/images/pop_sunda.jpg';
+              (e.target as HTMLImageElement).src = '/images/sound_kane_cover.jpg';
             }}
           />
         </div>
@@ -127,7 +127,7 @@ export function PlayerBar({
         <div className="flex items-center gap-1.5 shrink-0">
           <button
             onClick={onToggleLike}
-            title={isLiked ? 'Hapus ti lagu dipikaresep' : 'Pikaresep lagu'}
+            title={isLiked ? (lang === 'en' ? 'Remove from Liked' : 'Hapus dari lagu disukai') : (lang === 'en' ? 'Save to Liked Songs' : 'Sukai lagu')}
             className="p-1.5 rounded-full hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
           >
             <Heart

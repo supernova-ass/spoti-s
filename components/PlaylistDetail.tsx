@@ -4,7 +4,6 @@ import React from 'react';
 import {
   Play,
   Pause,
-  Shuffle,
   Trash2,
   CheckCircle2,
   Music,
@@ -54,7 +53,7 @@ export function PlaylistDetail({
 
   return (
     <div className="flex-1 overflow-y-auto pb-28 custom-scrollbar">
-      {/* Hero Header with Spotify dynamic gradient backdrop */}
+      {/* Hero Header with dynamic gradient backdrop */}
       <div className="relative p-6 md:p-8 bg-gradient-to-b from-neutral-800 to-neutral-900 border-b border-neutral-800">
         <div className="flex flex-col sm:flex-row items-center sm:items-end gap-6 max-w-6xl mx-auto">
           {/* Cover Artwork */}
@@ -64,7 +63,7 @@ export function PlaylistDetail({
               alt={playlist.title}
               className="w-full h-full object-cover"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = '/images/pop_sunda.jpg';
+                (e.target as HTMLImageElement).src = '/images/sound_kane_cover.jpg';
               }}
             />
           </div>
@@ -72,7 +71,7 @@ export function PlaylistDetail({
           {/* Metadata */}
           <div className="flex-1 text-center sm:text-left overflow-hidden">
             <span className="text-xs font-bold uppercase tracking-wider text-neutral-400">
-              Daptar Puter
+              Playlist
             </span>
             <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white mt-1 mb-2 tracking-tight line-clamp-2">
               {playlist.title}
@@ -81,15 +80,15 @@ export function PlaylistDetail({
               {playlist.description}
             </p>
             <div className="flex items-center justify-center sm:justify-start gap-2 text-xs font-medium text-neutral-300">
-              <span className="font-bold text-white">Spotify Sunda</span>
+              <span className="font-bold text-white">SpotiS</span>
               <span>·</span>
-              <span>{playlist.tracks.length} lagu</span>
+              <span>{playlist.tracks.length} {lang === 'en' ? 'tracks' : 'lagu'}</span>
               <span>·</span>
-              <span>Kinten {totalMinutes} menit</span>
+              <span>{lang === 'en' ? `~${totalMinutes} mins` : `Sekitar ${totalMinutes} menit`}</span>
               <span>·</span>
               <span className="text-[#1DB954] flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Disinkronkeun ka Awan</span>
+                <span>{t.synced}</span>
               </span>
             </div>
           </div>
@@ -116,7 +115,7 @@ export function PlaylistDetail({
             <button
               onClick={() => onDeletePlaylist(playlist.id)}
               className="p-3 rounded-full hover:bg-neutral-800 text-neutral-400 hover:text-red-400 transition-colors"
-              title="Hapus daptar puter"
+              title={lang === 'en' ? 'Delete playlist' : 'Hapus playlist'}
             >
               <Trash2 className="w-5 h-5" />
             </button>
@@ -143,9 +142,13 @@ export function PlaylistDetail({
         ) : (
           <div className="py-16 text-center text-neutral-400">
             <Music className="w-12 h-12 mx-auto mb-3 text-neutral-600" />
-            <p className="text-base font-semibold text-white">Daptar puter masih kosong</p>
+            <p className="text-base font-semibold text-white">
+              {lang === 'en' ? 'Playlist is currently empty' : 'Playlist masih kosong'}
+            </p>
             <p className="text-xs text-neutral-500 mt-1">
-              Pilari lagu dina kaca Palurukan atawa tambihan lagu Sunda asli.
+              {lang === 'en'
+                ? 'Search tracks or add songs from the catalog to this playlist.'
+                : 'Cari lagu di menu Cari atau tambahkan lagu dari katalog ke playlist ini.'}
             </p>
           </div>
         )}

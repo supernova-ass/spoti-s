@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Music } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Language, translations } from '@/lib/i18n';
 
 interface CreatePlaylistModalProps {
@@ -12,10 +12,10 @@ interface CreatePlaylistModalProps {
 }
 
 const DEFAULT_COVERS = [
+  '/images/sound_kane_cover.jpg',
   '/images/pop_sunda.jpg',
   '/images/sunda_degung.jpg',
   '/images/mojang_priangan.jpg',
-  '/images/manuk_dadali.jpg',
 ];
 
 export function CreatePlaylistModal({
@@ -62,7 +62,7 @@ export function CreatePlaylistModal({
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Conto: Karesep Peuting, Degung Kulawarga..."
+              placeholder={lang === 'en' ? 'e.g. Sound Kane Favorites, Chill Vibes...' : 'Contoh: Kumpulan Lagu Favorit, Sound Kane Asyik...'}
               required
               autoFocus
               className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-[#1DB954]"
@@ -76,7 +76,7 @@ export function CreatePlaylistModal({
             <textarea
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
-              placeholder="Katerangan ngeunaan daptar puter ieu..."
+              placeholder={lang === 'en' ? 'Description (optional)...' : 'Deskripsi playlist (opsional)...'}
               rows={2}
               className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3.5 py-2 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-[#1DB954] resize-none"
             />
@@ -84,7 +84,7 @@ export function CreatePlaylistModal({
 
           <div>
             <label className="block text-xs font-semibold text-neutral-400 mb-2">
-              Pilih Gambar Sampul Albeum
+              {lang === 'en' ? 'Select Playlist Cover' : 'Pilih Gambar Sampul Playlist'}
             </label>
             <div className="grid grid-cols-4 gap-2">
               {DEFAULT_COVERS.map((cov, i) => (
@@ -103,18 +103,17 @@ export function CreatePlaylistModal({
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-3">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-neutral-800">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-full text-xs font-semibold text-neutral-400 hover:text-white"
+              className="px-4 py-2 rounded-full text-xs font-semibold text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
             >
               {t.cancel}
             </button>
             <button
               type="submit"
-              disabled={!title.trim()}
-              className="px-6 py-2.5 rounded-full text-xs font-bold bg-[#1DB954] hover:bg-[#1ed760] text-black disabled:opacity-50 transition-colors"
+              className="px-5 py-2 rounded-full bg-[#1DB954] hover:bg-[#1ed760] text-black text-xs font-bold transition-all shadow-md shadow-[#1DB954]/20"
             >
               {t.save}
             </button>

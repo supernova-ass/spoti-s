@@ -7,7 +7,6 @@ import {
   Lock,
   User,
   Calendar,
-  Sparkles,
   Terminal,
   ShieldCheck,
   ChevronRight,
@@ -24,17 +23,17 @@ interface AuthScreenProps {
 
 const MONTHS = [
   'Januari',
-  'Pébruari',
+  'Februari',
   'Maret',
   'April',
-  'Méi',
+  'Mei',
   'Juni',
   'Juli',
   'Agustus',
-  'Séptémber',
+  'September',
   'Oktober',
-  'Nopémber',
-  'Désémber',
+  'November',
+  'Desember',
 ];
 
 export function AuthScreen({ onSuccess }: AuthScreenProps) {
@@ -52,10 +51,10 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
 
   // Nested Cascading Date of Birth (Style Beranak)
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 65 }, (_, i) => currentYear - 12 - i); // ages ~12 to 77
-  const [birthYear, setBirthYear] = useState<number>(2000);
-  const [birthMonth, setBirthMonth] = useState<number>(6); // 1-12
-  const [birthDay, setBirthDay] = useState<number>(15);
+  const years = Array.from({ length: 65 }, (_, i) => currentYear - 10 - i); // ages ~10 to 75
+  const [birthYear, setBirthYear] = useState<number>(2008);
+  const [birthMonth, setBirthMonth] = useState<number>(8); // 1-12
+  const [birthDay, setBirthDay] = useState<number>(8);
 
   // Notification state
   const [alertSuccess, setAlertSuccess] = useState<string | null>(null);
@@ -82,10 +81,10 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
         localStorage.setItem('spotis_current_user', JSON.stringify(data.user));
         onSuccess(data.user);
       } else {
-        setAlertError(data.error || 'Gagal lebet salaku developer.');
+        setAlertError(data.error || 'Gagal masuk sebagai developer.');
       }
     } catch {
-      setAlertError('Aya gangguan sambungan. Mangga cobi deui.');
+      setAlertError('Terjadi gangguan koneksi. Silakan coba lagi.');
     } finally {
       setIsLoading(false);
     }
@@ -102,7 +101,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
         body: JSON.stringify({
           action: 'social-login',
           provider,
-          name: `Pamaké ${provider}`,
+          name: `Pengguna ${provider}`,
           email: `${provider.toLowerCase()}_user_${Math.floor(Math.random() * 8999 + 1000)}@spotis.com`,
           avatar:
             provider === 'Google'
@@ -118,7 +117,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
         onSuccess(data.user);
       }
     } catch {
-      setAlertError('Gagal lebet liwat akun sosial.');
+      setAlertError('Gagal masuk melalui akun sosial.');
     } finally {
       setIsLoading(false);
     }
@@ -128,11 +127,11 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!registerName.trim()) {
-      setAlertError('Mangga lebetkeun nami anjeun.');
+      setAlertError('Silakan masukkan nama lengkap Anda.');
       return;
     }
     if (!registerPassword || registerPassword.length < 3) {
-      setAlertError('Kecap konci sahenteuna kedah 3 karakter.');
+      setAlertError('Kata sandi minimal 3 karakter.');
       return;
     }
 
@@ -158,16 +157,15 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
       const data = await res.json();
 
       if (data.success) {
-        // Show success notification & switch to login tab with prefilled values
-        setAlertSuccess('Akun parantos hasil kadaptar! Mangga klik "Masuk" sarta lebetkeun nami sareng kecap konci.');
+        setAlertSuccess('Akun berhasil terdaftar! Silakan klik tab "Masuk" dan masukkan nama serta kata sandi Anda.');
         setLoginIdentifier(registerName.trim());
         setLoginPassword(registerPassword);
         setActiveTab('masuk');
       } else {
-        setAlertError(data.error || 'Gagal ngadaptar akun. Mangga cobi deui.');
+        setAlertError(data.error || 'Gagal mendaftar akun. Silakan coba lagi.');
       }
     } catch {
-      setAlertError('Aya masalah sambungan ka server.');
+      setAlertError('Terjadi masalah koneksi ke server.');
     } finally {
       setIsLoading(false);
     }
@@ -177,7 +175,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!loginIdentifier.trim()) {
-      setAlertError('Mangga lebetkeun nami atawa email.');
+      setAlertError('Silakan masukkan nama atau email akun Anda.');
       return;
     }
 
@@ -201,10 +199,10 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
         localStorage.setItem('spotis_current_user', JSON.stringify(data.user));
         onSuccess(data.user);
       } else {
-        setAlertError(data.error || 'Nami atawa kecap konci lepat.');
+        setAlertError(data.error || 'Nama atau kata sandi tidak cocok.');
       }
     } catch {
-      setAlertError('Gagal ngahubungan server.');
+      setAlertError('Gagal menghubungi server.');
     } finally {
       setIsLoading(false);
     }
@@ -227,29 +225,35 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
             Spoti<span className="text-[#1DB954]">S</span>
           </h1>
           <p className="text-xs text-neutral-400 mt-1">
-            Dangukeun musik favorit anjeun iraha waé dina Basa Sunda
+            Dengarkan jutaan musik dan Kumpulan Sound Kane favorit Anda kapan saja
           </p>
         </div>
 
         {/* Developer Account Fast Access Banner */}
         <div className="mb-6 p-3 rounded-2xl bg-neutral-800/80 border border-emerald-500/30 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-[#1DB954] flex items-center justify-center shrink-0">
-              <Terminal className="w-4 h-4" />
-            </div>
+            <img
+              src="/images/profile-dev.jpeg"
+              alt="Developer Profile"
+              className="w-10 h-10 rounded-xl object-cover border border-[#1DB954]/60 shadow-md shrink-0"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/profile-dev.jpeg';
+              }}
+            />
             <div className="overflow-hidden">
               <div className="text-[11px] font-bold uppercase tracking-wider text-[#1DB954] flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" /> Akun Dev Khusus
+                <ShieldCheck className="w-3.5 h-3.5" /> Akun Dev Khusus
               </div>
               <div className="text-xs font-mono text-neutral-200 truncate">fzpedia@dev.id</div>
+              <div className="text-[10px] text-neutral-400">Lahir: 2008-08-08</div>
             </div>
           </div>
           <button
             onClick={handleDevLogin}
             disabled={isLoading}
-            className="px-3 py-1.5 rounded-full bg-[#1DB954] hover:bg-[#1ed760] active:scale-95 text-black font-bold text-xs shrink-0 transition-all shadow-md shadow-[#1DB954]/20 flex items-center gap-1"
+            className="px-3.5 py-2 rounded-full bg-[#1DB954] hover:bg-[#1ed760] active:scale-95 text-black font-extrabold text-xs shrink-0 transition-all shadow-md shadow-[#1DB954]/20 flex items-center gap-1"
           >
-            <span>Lebet Dev</span>
+            <span>Masuk Dev</span>
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -307,7 +311,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
-                Nami Lengkap atawa Email
+                Nama Lengkap atau Email
               </label>
               <div className="relative">
                 <User className="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -315,7 +319,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
                   type="text"
                   value={loginIdentifier}
                   onChange={(e) => setLoginIdentifier(e.target.value)}
-                  placeholder="Conto: fzpedia@dev.id atawa nami anjeun"
+                  placeholder="Contoh: fzpedia@dev.id atau nama Anda"
                   className="w-full bg-neutral-800 text-white placeholder-neutral-500 text-sm rounded-xl pl-10 pr-4 py-3 border border-neutral-700 focus:border-[#1DB954] focus:outline-none transition-colors"
                 />
               </div>
@@ -323,7 +327,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
 
             <div>
               <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
-                Kecap Konci (Password)
+                Kata Sandi (Password)
               </label>
               <div className="relative">
                 <Lock className="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -331,7 +335,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
                   type={showLoginPassword ? 'text' : 'password'}
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
-                  placeholder="Lebetkeun kecap konci"
+                  placeholder="Masukkan kata sandi"
                   className="w-full bg-neutral-800 text-white placeholder-neutral-500 text-sm rounded-xl pl-10 pr-10 py-3 border border-neutral-700 focus:border-[#1DB954] focus:outline-none transition-colors"
                 />
                 <button
@@ -349,7 +353,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
               disabled={isLoading}
               className="w-full py-3 rounded-full bg-[#1DB954] hover:bg-[#1ed760] active:scale-98 text-black font-extrabold text-sm transition-all shadow-lg shadow-[#1DB954]/25 flex items-center justify-center gap-2 mt-2"
             >
-              <span>{isLoading ? 'Keur mariksa...' : 'Lebet ka SpotiS'}</span>
+              <span>{isLoading ? 'Sedang memeriksa...' : 'Masuk ke SpotiS'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
@@ -360,7 +364,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
           <form onSubmit={handleRegister} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
-                Nami Lengkap
+                Nama Lengkap
               </label>
               <div className="relative">
                 <User className="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -368,7 +372,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
                   type="text"
                   value={registerName}
                   onChange={(e) => setRegisterName(e.target.value)}
-                  placeholder="Lebetkeun nami anjeun"
+                  placeholder="Masukkan nama lengkap Anda"
                   className="w-full bg-neutral-800 text-white placeholder-neutral-500 text-sm rounded-xl pl-10 pr-4 py-2.5 border border-neutral-700 focus:border-[#1DB954] focus:outline-none transition-colors"
                 />
               </div>
@@ -379,7 +383,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
               <div className="flex items-center justify-between mb-1.5">
                 <label className="text-xs font-semibold text-neutral-300 flex items-center gap-1.5">
                   <Calendar className="w-3.5 h-3.5 text-[#1DB954]" />
-                  <span>Kelahiran (Pilihan Beranak)</span>
+                  <span>Tanggal Kelahiran (Struktur Beranak)</span>
                 </label>
                 <span className="text-[11px] font-mono text-[#1DB954] bg-[#1DB954]/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
                   {birthDay} {MONTHS[birthMonth - 1]} {birthYear}
@@ -388,13 +392,13 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
 
               {/* Nested hierarchical cascading cards with connecting tree indicators */}
               <div className="bg-neutral-800/60 p-3 rounded-2xl border border-neutral-700/60 space-y-2.5">
-                {/* 1. Cabang Taun (Induk) */}
+                {/* 1. Tingkat Tahun (Induk) */}
                 <div className="flex items-center gap-2">
                   <div className="w-6 h-6 rounded-md bg-neutral-700 text-[10px] font-bold text-neutral-300 flex items-center justify-center shrink-0">
                     1
                   </div>
                   <div className="flex-1">
-                    <span className="text-[11px] text-neutral-400 block mb-1">Taun Lahir:</span>
+                    <span className="text-[11px] text-neutral-400 block mb-1">Tahun Lahir (Induk):</span>
                     <select
                       value={birthYear}
                       onChange={(e) => {
@@ -407,7 +411,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
                     >
                       {years.map((y) => (
                         <option key={y} value={y} className="bg-neutral-900 text-white">
-                          {y}
+                          Tahun {y}
                         </option>
                       ))}
                     </select>
@@ -416,13 +420,13 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
 
                 {/* Connecting branch indicator */}
                 <div className="pl-3 border-l-2 border-neutral-700 ml-3 space-y-2.5">
-                  {/* 2. Cabang Sasih (Anak ke-1) */}
+                  {/* 2. Tingkat Bulan (Anak ke-1) */}
                   <div className="flex items-center gap-2 pl-2">
                     <div className="w-5 h-5 rounded-md bg-neutral-700 text-[10px] font-bold text-neutral-300 flex items-center justify-center shrink-0">
                       2
                     </div>
                     <div className="flex-1">
-                      <span className="text-[11px] text-neutral-400 block mb-1">Sasih (Bulan):</span>
+                      <span className="text-[11px] text-neutral-400 block mb-1">Bulan Lahir (Anak ke-1):</span>
                       <select
                         value={birthMonth}
                         onChange={(e) => {
@@ -435,20 +439,20 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
                       >
                         {MONTHS.map((m, idx) => (
                           <option key={m} value={idx + 1} className="bg-neutral-900 text-white">
-                            {m} ({idx + 1})
+                            {m} (Bulan {idx + 1})
                           </option>
                         ))}
                       </select>
                     </div>
                   </div>
 
-                  {/* 3. Cabang Tanggal (Cucu / Anak ke-2) */}
+                  {/* 3. Tingkat Tanggal (Cucu / Anak ke-2) */}
                   <div className="flex items-center gap-2 pl-2">
                     <div className="w-5 h-5 rounded-md bg-emerald-500/20 text-[10px] font-bold text-[#1DB954] flex items-center justify-center shrink-0">
                       3
                     </div>
                     <div className="flex-1">
-                      <span className="text-[11px] text-neutral-400 block mb-1">Tanggal:</span>
+                      <span className="text-[11px] text-neutral-400 block mb-1">Tanggal Lahir (Anak ke-2):</span>
                       <select
                         value={birthDay}
                         onChange={(e) => setBirthDay(Number(e.target.value))}
@@ -468,7 +472,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
 
             <div>
               <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
-                Kecap Konci (Password)
+                Kata Sandi (Password)
               </label>
               <div className="relative">
                 <Lock className="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -476,7 +480,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
                   type={showRegisterPassword ? 'text' : 'password'}
                   value={registerPassword}
                   onChange={(e) => setRegisterPassword(e.target.value)}
-                  placeholder="Kecap konci akun anjeun"
+                  placeholder="Buat kata sandi akun Anda"
                   className="w-full bg-neutral-800 text-white placeholder-neutral-500 text-sm rounded-xl pl-10 pr-10 py-2.5 border border-neutral-700 focus:border-[#1DB954] focus:outline-none transition-colors"
                 />
                 <button
@@ -494,7 +498,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
               disabled={isLoading}
               className="w-full py-3 rounded-full bg-[#1DB954] hover:bg-[#1ed760] active:scale-98 text-black font-extrabold text-sm transition-all shadow-lg shadow-[#1DB954]/25 flex items-center justify-center gap-2 mt-2"
             >
-              <span>{isLoading ? 'Keur ngadaftarkeun...' : 'Daftar Akun SpotiS'}</span>
+              <span>{isLoading ? 'Sedang mendaftarkan...' : 'Daftar Akun SpotiS'}</span>
               <CheckCircle2 className="w-4 h-4" />
             </button>
           </form>
@@ -506,7 +510,7 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
             <div className="w-full border-t border-neutral-800" />
           </div>
           <span className="relative bg-neutral-900/90 px-3 text-[11px] font-semibold text-neutral-500 uppercase tracking-wider">
-            Atawa lebet nganggo
+            Atau masuk dengan
           </span>
         </div>
 

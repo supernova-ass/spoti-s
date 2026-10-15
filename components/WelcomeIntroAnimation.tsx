@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Music, Sparkles, Volume2 } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Music, Sparkles } from 'lucide-react';
 import { UserAccount } from '@/lib/types';
 
 interface WelcomeIntroAnimationProps {
@@ -58,13 +58,12 @@ export function WelcomeIntroAnimation({ user, genres, onFinish }: WelcomeIntroAn
         transition={{ duration: 0.7, ease: 'easeOut' }}
         className="relative mb-6"
       >
-        {/* Pulsing ring 1 */}
+        {/* Pulsing rings */}
         <motion.div
           animate={{ scale: [1, 1.6], opacity: [0.6, 0] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: 'easeOut' }}
           className="absolute inset-0 rounded-3xl bg-[#1DB954]/40 blur-md pointer-events-none"
         />
-        {/* Pulsing ring 2 */}
         <motion.div
           animate={{ scale: [1, 1.3], opacity: [0.8, 0] }}
           transition={{ duration: 1.5, delay: 0.4, repeat: Infinity, ease: 'easeOut' }}
@@ -87,7 +86,7 @@ export function WelcomeIntroAnimation({ user, genres, onFinish }: WelcomeIntroAn
           Spoti<span className="text-[#1DB954]">S</span>
         </h1>
         <p className="text-sm font-semibold tracking-wide text-neutral-400 mt-1 uppercase">
-          Pamuter Musik & Lirik Lokal
+          Pemutar Musik & Kumpulan Sound Kane Modern
         </p>
       </motion.div>
 
@@ -100,7 +99,7 @@ export function WelcomeIntroAnimation({ user, genres, onFinish }: WelcomeIntroAn
       >
         <div className="flex items-center justify-center gap-2 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-2">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Wilujeng Sumping</span>
+          <span>Selamat Datang</span>
         </div>
 
         <h2 className="text-xl sm:text-2xl font-bold text-white mb-3">
@@ -152,7 +151,7 @@ export function WelcomeIntroAnimation({ user, genres, onFinish }: WelcomeIntroAn
           />
         </div>
         <div className="text-[11px] text-neutral-500 mt-2 flex items-center justify-between">
-          <span>Nyiapkeun audio & lirik...</span>
+          <span>Menyiapkan audio & koleksi musik...</span>
           <span className="font-mono text-neutral-400">{progress}%</span>
         </div>
       </motion.div>
@@ -164,7 +163,7 @@ export function WelcomeIntroAnimation({ user, genres, onFinish }: WelcomeIntroAn
         transition={{ delay: 1 }}
         className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
       >
-        Klik di mana waé pikeun langsung lebet →
+        Klik di mana saja untuk langsung masuk ke SpotiS →
       </motion.p>
     </motion.div>
   );

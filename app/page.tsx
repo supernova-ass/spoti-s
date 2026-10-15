@@ -18,7 +18,7 @@ import { MobileNav } from '@/components/MobileNav';
 import { AuthScreen } from '@/components/AuthScreen';
 import { GenreSelectionScreen } from '@/components/GenreSelectionScreen';
 import { WelcomeIntroAnimation } from '@/components/WelcomeIntroAnimation';
-import { SUNDA_SONGS, INITIAL_PLAYLISTS } from '@/lib/sunda-songs';
+import { SUNDA_SONGS, SOUND_KANE_SONGS, ALL_SONGS, INITIAL_PLAYLISTS } from '@/lib/sunda-songs';
 import { Song, Playlist, CloudSyncData, UserAccount } from '@/lib/types';
 import { Language, translations } from '@/lib/i18n';
 import { sundaAudio } from '@/lib/audio-synthesizer';
@@ -35,7 +35,7 @@ import {
 } from '@/lib/custom-audio-db';
 
 export default function SpotifySundaApp() {
-  const [lang, setLang] = useState<Language>('su');
+  const [lang, setLang] = useState<Language>('id');
   const t = translations[lang];
 
   // User Authentication & Onboarding state
@@ -55,6 +55,11 @@ export default function SpotifySundaApp() {
         const savedUser = localStorage.getItem('spotis_current_user');
         if (savedUser) {
           const parsed: UserAccount = JSON.parse(savedUser);
+          if (parsed.email === 'fzpedia@dev.id') {
+            parsed.birthDate = '2008-08-08';
+            parsed.avatar = '/images/profile-dev.jpeg';
+            localStorage.setItem('spotis_current_user', JSON.stringify(parsed));
+          }
           setCurrentUser(parsed);
           if (!parsed.favoriteGenres || parsed.favoriteGenres.length < 5) {
             setShowGenreScreen(true);
@@ -113,14 +118,14 @@ export default function SpotifySundaApp() {
   const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Playback state
-  const [currentSong, setCurrentSong] = useState<Song | null>(SUNDA_SONGS[0]);
+  const [currentSong, setCurrentSong] = useState<Song | null>(SOUND_KANE_SONGS[0] || SUNDA_SONGS[0]);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(SUNDA_SONGS[0].duration || 105);
+  const [duration, setDuration] = useState<number>(SOUND_KANE_SONGS[0]?.duration || 23);
   const [volume, setVolume] = useState<number>(0.8);
   const [isShuffle, setIsShuffle] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
-  const [queue, setQueue] = useState<Song[]>(SUNDA_SONGS.slice(1));
+  const [queue, setQueue] = useState<Song[]>(SOUND_KANE_SONGS.slice(1).concat(SUNDA_SONGS));
 
   // Modals & Drawers
   const [isLyricsOpen, setIsLyricsOpen] = useState(false);
@@ -136,6 +141,8 @@ export default function SpotifySundaApp() {
   // Native HTML Audio element for remote streams
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const handleNextTrackRef = useRef<() => void>(() => {});
+  const playPromiseRef = useRef<Promise<void> | null>(null);
+  const shouldPlayRef = useRef<boolean>(false);
 
   // Load offline lyrics from localStorage on client mount to prevent hydration mismatch
   useEffect(() => {
@@ -193,7 +200,13 @@ export default function SpotifySundaApp() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const audio = new Audio();
+      audio.preload = 'auto';
       audioRef.current = audio;
+
+      const initialUrl = (currentSong && customAudioMap[currentSong.id]) || currentSong?.audioUrl;
+      if (initialUrl) {
+        audio.src = initialUrl;
+      }
 
       audio.addEventListener('timeupdate', () => {
         setCurrentTime(audio.currentTime);
@@ -209,9 +222,23 @@ export default function SpotifySundaApp() {
         handleNextTrackRef.current();
       });
 
+      audio.addEventListener('error', () => {
+        console.warn('Audio element error:', audio.error?.message || audio.error?.code);
+      });
+
       return () => {
-        audio.pause();
-        audio.src = '';
+        shouldPlayRef.current = false;
+        if (playPromiseRef.current) {
+          playPromiseRef.current
+            .then(() => {
+              audio.pause();
+              audio.src = '';
+            })
+            .catch(() => {});
+        } else {
+          audio.pause();
+          audio.src = '';
+        }
       };
     }
   }, []);
@@ -276,6 +303,57 @@ export default function SpotifySundaApp() {
     };
   }, [playlists, likedSongIds, triggerCloudSync]);
 
+  // Safe Play helper preventing "The play() request was interrupted by a call to pause()."
+  const safePlayAudio = () => {
+    if (!audioRef.current) return;
+    shouldPlayRef.current = true;
+    const promise = audioRef.current.play();
+    if (promise !== undefined) {
+      playPromiseRef.current = promise;
+      promise
+        .then(() => {
+          playPromiseRef.current = null;
+          // If the user requested pause while the play promise was still resolving:
+          if (!shouldPlayRef.current && audioRef.current) {
+            audioRef.current.pause();
+          }
+        })
+        .catch((err: unknown) => {
+          playPromiseRef.current = null;
+          // Benign error handling for quick pause or source switch
+          const msg = err instanceof Error ? err.message : String(err);
+          const isInterrupted =
+            (err instanceof DOMException && (err.name === 'AbortError' || err.name === 'NotAllowedError')) ||
+            msg.includes('interrupted by a call to pause') ||
+            msg.includes('interrupted by a new load request');
+          if (!isInterrupted) {
+            console.warn('Audio playback notice:', err);
+          }
+        });
+    }
+  };
+
+  // Safe Pause helper preventing interruption of in-flight play() promise
+  const safePauseAudio = () => {
+    shouldPlayRef.current = false;
+    if (!audioRef.current) return;
+
+    if (playPromiseRef.current) {
+      // Wait for in-flight play() to resolve, then pause gracefully
+      playPromiseRef.current
+        .then(() => {
+          if (!shouldPlayRef.current && audioRef.current) {
+            audioRef.current.pause();
+          }
+        })
+        .catch(() => {
+          // Rejection handled in safePlayAudio catch
+        });
+    } else {
+      audioRef.current.pause();
+    }
+  };
+
   // Play / Pause core router
   const handlePlaySong = (song: Song) => {
     const isSameSong = currentSong?.id === song.id;
@@ -285,16 +363,18 @@ export default function SpotifySundaApp() {
       if (isPlaying) {
         // Pause
         setIsPlaying(false);
+        shouldPlayRef.current = false;
         if (targetAudioUrl && audioRef.current) {
-          audioRef.current.pause();
+          safePauseAudio();
         } else if (sundaAudio) {
           sundaAudio.pause();
         }
       } else {
         // Resume
         setIsPlaying(true);
+        shouldPlayRef.current = true;
         if (targetAudioUrl && audioRef.current) {
-          audioRef.current.play().catch((err) => console.error(err));
+          safePlayAudio();
         } else if (sundaAudio) {
           sundaAudio.resume();
         }
@@ -303,9 +383,7 @@ export default function SpotifySundaApp() {
     }
 
     // Switching to a new song
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
+    safePauseAudio();
     if (sundaAudio) {
       sundaAudio.stop();
     }
@@ -315,11 +393,35 @@ export default function SpotifySundaApp() {
     setCurrentTime(0);
     setDuration(song.duration || 100);
     setIsPlaying(true);
+    shouldPlayRef.current = true;
 
     if (targetAudioUrl && audioRef.current) {
-      audioRef.current.src = targetAudioUrl;
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch((err) => console.error('Audio play error:', err));
+      const audio = audioRef.current;
+      const startNewTrack = () => {
+        try {
+          audio.src = targetAudioUrl;
+          audio.currentTime = 0;
+          safePlayAudio();
+        } catch {
+          // ignore synchronous error
+        }
+      };
+
+      if (playPromiseRef.current) {
+        playPromiseRef.current
+          .then(() => {
+            if (shouldPlayRef.current) {
+              startNewTrack();
+            }
+          })
+          .catch(() => {
+            if (shouldPlayRef.current) {
+              startNewTrack();
+            }
+          });
+      } else {
+        startNewTrack();
+      }
     } else if (sundaAudio) {
       const melodyKey = song.melodyKey || 'default';
       sundaAudio.playTrack(melodyKey, song.duration || 100, 0);
@@ -366,7 +468,7 @@ export default function SpotifySundaApp() {
       handleSeek(0);
       if (currentSong.audioUrl && audioRef.current) {
         audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(() => {});
+        safePlayAudio();
       } else if (sundaAudio) {
         sundaAudio.playTrack(currentSong.melodyKey || 'default', duration, 0);
       }
@@ -379,7 +481,7 @@ export default function SpotifySundaApp() {
       handlePlaySong(nextSong);
     } else {
       // Loop over catalog
-      const allTracks = SUNDA_SONGS;
+      const allTracks = ALL_SONGS;
       const currentIndex = allTracks.findIndex((s) => s.id === currentSong?.id);
       const nextIndex = (currentIndex + 1) % allTracks.length;
       handlePlaySong(allTracks[nextIndex]);
@@ -395,7 +497,7 @@ export default function SpotifySundaApp() {
       handleSeek(0);
       return;
     }
-    const allTracks = SUNDA_SONGS;
+    const allTracks = ALL_SONGS;
     const currentIndex = allTracks.findIndex((s) => s.id === currentSong?.id);
     const prevIndex = (currentIndex - 1 + allTracks.length) % allTracks.length;
     handlePlaySong(allTracks[prevIndex]);
@@ -491,7 +593,7 @@ export default function SpotifySundaApp() {
   };
 
   // Liked songs collection
-  const allKnownSongs = [...SUNDA_SONGS, ...(currentSong ? [currentSong] : [])];
+  const allKnownSongs = [...ALL_SONGS, ...(currentSong ? [currentSong] : [])];
   const likedSongs = allKnownSongs.filter((s) => likedSongIds.includes(s.id));
 
   const selectedPlaylist = playlists.find((p) => p.id === selectedPlaylistId);
@@ -546,7 +648,7 @@ export default function SpotifySundaApp() {
           <TopNav
             currentView={currentView}
             lang={lang}
-            onToggleLang={() => setLang(lang === 'su' ? 'id' : 'su')}
+            onToggleLang={() => setLang(lang === 'id' ? 'en' : 'id')}
             isSyncing={isSyncing}
             onTriggerSync={triggerCloudSync}
             currentSong={currentSong}

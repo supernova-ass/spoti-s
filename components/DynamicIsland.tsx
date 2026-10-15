@@ -60,7 +60,7 @@ export function DynamicIsland({
     return (
       <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/80 border border-neutral-800 text-neutral-400 text-xs shadow-md select-none">
         <Disc3 className="w-4 h-4 text-[#1DB954]" />
-        <span className="font-semibold text-[11px] text-neutral-300">Spotify Sunda</span>
+        <span className="font-semibold text-[11px] text-neutral-300">SpotiS</span>
       </div>
     );
   }
@@ -74,7 +74,7 @@ export function DynamicIsland({
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.97 }}
         className="group relative flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-black/95 hover:bg-neutral-900 border border-neutral-800 hover:border-[#1DB954]/50 shadow-xl text-left select-none transition-colors"
-        title="Buka pamuter Dynamic Island"
+        title="Buka pemutar Dynamic Island"
       >
         {/* Left end: Rotating Cassette / Vinyl Disc */}
         <div className="relative w-6 h-6 rounded-full overflow-hidden bg-neutral-900 border border-neutral-700 shrink-0 shadow-inner">
@@ -89,7 +89,7 @@ export function DynamicIsland({
                 : { duration: 0.3 }
             }
             onError={(e) => {
-              (e.target as HTMLImageElement).src = '/images/pop_sunda.jpg';
+              (e.target as HTMLImageElement).src = '/images/sound_kane_cover.jpg';
             }}
           />
           {/* Vinyl center hole and groove shimmer */}
@@ -175,7 +175,7 @@ export function DynamicIsland({
                           : { duration: 0.3 }
                       }
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/images/pop_sunda.jpg';
+                        (e.target as HTMLImageElement).src = '/images/sound_kane_cover.jpg';
                       }}
                     />
                     <div className="absolute inset-0 rounded-full border border-black/40 pointer-events-none" />
@@ -185,7 +185,7 @@ export function DynamicIsland({
                   {/* Title & Artist */}
                   <div className="overflow-hidden min-w-0 pr-2">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-[#1DB954] block">
-                      Dynamic Island Pamuter
+                      Pemutar Dynamic Island
                     </span>
                     <h3 className="text-base font-bold text-white truncate tracking-tight">
                       {currentSong.title}
@@ -201,7 +201,7 @@ export function DynamicIsland({
                   type="button"
                   onClick={() => setIsExpanded(false)}
                   className="w-8 h-8 rounded-full bg-neutral-900 hover:bg-neutral-800 flex items-center justify-center text-neutral-400 hover:text-white transition-colors shrink-0"
-                  title="Tutup / Balik ka header kénca"
+                  title="Tutup"
                 >
                   <X className="w-4 h-4" />
                 </button>

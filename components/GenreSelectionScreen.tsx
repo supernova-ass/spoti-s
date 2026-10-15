@@ -6,11 +6,6 @@ import {
   Check,
   Sparkles,
   ArrowRight,
-  Disc3,
-  Headphones,
-  Flame,
-  Radio,
-  Sliders,
 } from 'lucide-react';
 import { UserAccount } from '@/lib/types';
 
@@ -28,22 +23,22 @@ interface GenreItem {
 }
 
 const AVAILABLE_GENRES: GenreItem[] = [
-  { id: 'pop', name: 'Pop Hits', description: 'Melodi viral & tangga lagu top', gradient: 'from-blue-600 to-indigo-900', icon: '🎵' },
-  { id: 'dj', name: 'DJ & Remix', description: 'Bass mantap & beat gember', gradient: 'from-fuchsia-600 to-purple-950', icon: '🎧' },
-  { id: 'rock', name: 'Rock & Metal', description: 'Gitar distorsi & énergi luhur', gradient: 'from-red-600 to-amber-950', icon: '🎸' },
-  { id: 'hiphop', name: 'Hip-Hop & Rap', description: 'Rima seukeut & flow dinamis', gradient: 'from-amber-600 to-orange-950', icon: '🎤' },
-  { id: 'rnb', name: 'R&B & Soul', description: 'Irama lemes & vokal haneut', gradient: 'from-rose-600 to-pink-950', icon: '✨' },
-  { id: 'kpop', name: 'K-Pop', description: 'Idol hits & koreografi ritmis', gradient: 'from-pink-500 to-purple-900', icon: '🇰🇷' },
-  { id: 'edm', name: 'EDM & Club', description: 'Drop listrik & festival beat', gradient: 'from-cyan-500 to-blue-950', icon: '⚡' },
-  { id: 'dangdut', name: 'Dangdut Koplo', description: 'Kendang rampak & goyang santuy', gradient: 'from-emerald-600 to-teal-950', icon: '🎹' },
-  { id: 'akustik', name: 'Akustik & Santai', description: 'Petikan gitar & suasana tiis', gradient: 'from-lime-600 to-emerald-950', icon: '☕' },
-  { id: 'indie', name: 'Indie & Folk', description: 'Lirik puitis & musik mandiri', gradient: 'from-teal-600 to-cyan-950', icon: '🌿' },
-  { id: 'lofi', name: 'Lo-Fi Chill Beats', description: 'Pikeun diajar, santai & saré', gradient: 'from-violet-600 to-indigo-950', icon: '🌙' },
-  { id: 'jazz', name: 'Jazz & Blues', description: 'Harmoni piano & saksofon', gradient: 'from-yellow-600 to-stone-900', icon: '🎷' },
-  { id: 'jpop', name: 'J-Pop & Anime', description: 'Soundtrack & anime theme', gradient: 'from-sky-500 to-indigo-950', icon: '🗾' },
-  { id: 'sunda', name: 'Sunda & Tradisional', description: 'Degung, suling & tembang asri', gradient: 'from-emerald-500 to-stone-950', icon: '🎋' },
-  { id: 'klasik', name: 'Melodi Klasik', description: 'Orkestra & instrumén tenang', gradient: 'from-stone-600 to-neutral-900', icon: '🎻' },
-  { id: 'reggae', name: 'Reggae & Ska', description: 'Irama santai Parahyangan pantai', gradient: 'from-green-600 to-yellow-950', icon: '🌴' },
+  { id: 'pop', name: 'Pop Hits', description: 'Melodi viral & tangga lagu terpopuler', gradient: 'from-blue-600 to-indigo-900', icon: '🎵' },
+  { id: 'dj', name: 'DJ & Remix', description: 'Bass mantap jedag-jedug & beat kane', gradient: 'from-fuchsia-600 to-purple-950', icon: '🎧' },
+  { id: 'rock', name: 'Rock & Metal', description: 'Gitar distorsi & riff berenergi tinggi', gradient: 'from-red-600 to-amber-950', icon: '🎸' },
+  { id: 'hiphop', name: 'Hip-Hop & Rap', description: 'Rima tajam & beat hip-hop modern', gradient: 'from-amber-600 to-orange-950', icon: '🎤' },
+  { id: 'rnb', name: 'R&B & Soul', description: 'Irama santai & vokal penuh penghayatan', gradient: 'from-rose-600 to-pink-950', icon: '✨' },
+  { id: 'kpop', name: 'K-Pop', description: 'Lagu idol hits & beat enerjik', gradient: 'from-pink-500 to-purple-900', icon: '🇰🇷' },
+  { id: 'edm', name: 'EDM & Club', description: 'Drop listrik & festival dance beat', gradient: 'from-cyan-500 to-blue-950', icon: '⚡' },
+  { id: 'dangdut', name: 'Dangdut Koplo', description: 'Kendang rampak & tempo goyang asyik', gradient: 'from-emerald-600 to-teal-950', icon: '🎹' },
+  { id: 'akustik', name: 'Akustik & Santai', description: 'Petikan gitar lembut & suasana tenang', gradient: 'from-lime-600 to-emerald-950', icon: '☕' },
+  { id: 'indie', name: 'Indie & Folk', description: 'Lirik puitis & aransemen orisinal', gradient: 'from-teal-600 to-cyan-950', icon: '🌿' },
+  { id: 'lofi', name: 'Lo-Fi Chill Beats', description: 'Teman belajar, kerja & relaksasi', gradient: 'from-violet-600 to-indigo-950', icon: '🌙' },
+  { id: 'jazz', name: 'Jazz & Blues', description: 'Harmoni piano & tiupan saksofon', gradient: 'from-yellow-600 to-stone-900', icon: '🎷' },
+  { id: 'jpop', name: 'J-Pop & Anime', description: 'Original soundtrack & anime vibes', gradient: 'from-sky-500 to-indigo-950', icon: '🗾' },
+  { id: 'nusantara', name: 'Nusantara & Etnik', description: 'Kekayaan melodi klasik nusantara', gradient: 'from-emerald-500 to-stone-950', icon: '🎋' },
+  { id: 'klasik', name: 'Melodi Klasik', description: 'Aransemen orkestra & instrumen megah', gradient: 'from-stone-600 to-neutral-900', icon: '🎻' },
+  { id: 'reggae', name: 'Reggae & Ska', description: 'Irama santai pantai & iringan asoy', gradient: 'from-green-600 to-yellow-950', icon: '🌴' },
 ];
 
 export function GenreSelectionScreen({ user, onComplete }: GenreSelectionScreenProps) {
@@ -59,7 +54,7 @@ export function GenreSelectionScreen({ user, onComplete }: GenreSelectionScreenP
       if (selectedGenres.length < 5) {
         setSelectedGenres([...selectedGenres, genreName]);
       } else {
-        // Replace oldest or shift
+        // Shift oldest
         setSelectedGenres([...selectedGenres.slice(1), genreName]);
       }
     }
@@ -95,17 +90,17 @@ export function GenreSelectionScreen({ user, onComplete }: GenreSelectionScreenP
       <div className="max-w-4xl mx-auto w-full pt-4 sm:pt-8 text-center relative z-10">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-neutral-900 border border-neutral-800 text-xs text-neutral-300 mb-4 shadow-sm">
           <Sparkles className="w-3.5 h-3.5 text-[#1DB954]" />
-          <span>Wilujeng sumping, <strong className="text-white">{user.name}</strong></span>
+          <span>Selamat datang, <strong className="text-white">{user.name}</strong></span>
           {user.role === 'developer' && (
             <span className="bg-[#1DB954] text-black font-extrabold text-[10px] px-2 py-0.5 rounded-full">DEV</span>
           )}
         </div>
 
         <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white mb-2">
-          Pilih 5 Genre Musik Pilihan Anjeun
+          Pilih 5 Genre Musik Favorit Anda
         </h1>
         <p className="text-sm text-neutral-400 max-w-lg mx-auto">
-          SpotiS bakal nyaluyukeun rekomendasi tembang dumasar kana selera musik anu dipilih ku anjeun.
+          SpotiS akan menyesuaikan rekomendasi lagu dan sound kane terbaik sesuai selera yang Anda sukai.
         </p>
 
         {/* Selected Counter Pill */}
@@ -118,9 +113,9 @@ export function GenreSelectionScreen({ user, onComplete }: GenreSelectionScreenP
                 : 'bg-neutral-800 text-neutral-300'
             }`}
           >
-            {selectedGenres.length} / 5 genre kapilih
+            {selectedGenres.length} / 5 genre dipilih
           </span>
-          {isReady && <span className="text-xs text-[#1DB954] font-medium">· Sampurna!</span>}
+          {isReady && <span className="text-xs text-[#1DB954] font-medium">· Sempurna!</span>}
         </div>
       </div>
 
@@ -178,11 +173,11 @@ export function GenreSelectionScreen({ user, onComplete }: GenreSelectionScreenP
             {isReady ? (
               <span className="text-emerald-400 font-medium flex items-center gap-1.5">
                 <Check className="w-4 h-4 text-[#1DB954]" />
-                Genre parantos dipilih lengkep. Klik Salajengna pikeun ngamimitian SpotiS!
+                5 genre sudah dipilih lengkap! Tekan Selanjutnya untuk mulai mendengarkan di SpotiS.
               </span>
             ) : (
               <span>
-                Mangga pilih <strong className="text-white">{5 - selectedGenres.length}</strong> genre deui pikeun ngahontal 5 genre.
+                Pilih <strong className="text-white">{5 - selectedGenres.length}</strong> genre lagi untuk melengkapi pilihan 5 genre Anda.
               </span>
             )}
           </div>
@@ -196,7 +191,7 @@ export function GenreSelectionScreen({ user, onComplete }: GenreSelectionScreenP
                 : 'bg-neutral-800 text-neutral-500 cursor-not-allowed border border-neutral-700/50'
             }`}
           >
-            <span>{isSubmitting ? 'Keur nyiapkeun...' : 'Salajengna'}</span>
+            <span>{isSubmitting ? 'Menyiapkan...' : 'Selanjutnya'}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>

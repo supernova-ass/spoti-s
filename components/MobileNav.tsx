@@ -55,7 +55,7 @@ export function MobileNav({
               alt={currentSong.title}
               className="w-10 h-10 rounded-md object-cover shrink-0"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = '/images/pop_sunda.jpg';
+                (e.target as HTMLImageElement).src = '/images/sound_kane_cover.jpg';
               }}
             />
             <div className="overflow-hidden">
@@ -78,7 +78,7 @@ export function MobileNav({
             <button
               onClick={onToggleLike}
               className="p-2 text-neutral-400 hover:text-[#1DB954]"
-              title="Pikaresep"
+              title={isLiked ? (lang === 'en' ? 'Unlike' : 'Hapus dari disukai') : (lang === 'en' ? 'Like' : 'Sukai')}
             >
               <Heart className={`w-4 h-4 ${isLiked ? 'fill-[#1DB954] text-[#1DB954]' : ''}`} />
             </button>

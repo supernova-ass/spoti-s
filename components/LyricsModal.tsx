@@ -187,7 +187,7 @@ export function LyricsModal({
       {downloadSuccessToast && (
         <div className="bg-[#1DB954] text-black text-xs font-bold py-2 px-4 text-center transition-all animate-in slide-in-from-top flex items-center justify-center gap-2">
           <Check className="w-4 h-4" />
-          <span>{t.downloadSuccess} (File .LRC diunduh & kasimpen offline)</span>
+          <span>{t.downloadSuccess}</span>
         </div>
       )}
 
@@ -239,7 +239,9 @@ export function LyricsModal({
         ) : (
           <div className="h-full flex flex-col items-center justify-center text-neutral-400 space-y-3">
             <Music2 className="w-12 h-12 text-neutral-600" />
-            <p className="text-base font-semibold">Lirik keur lagu ieu can sayagi.</p>
+            <p className="text-base font-semibold">
+              {lang === 'en' ? 'Lyrics not available yet for this track.' : 'Lirik belum tersedia untuk lagu ini.'}
+            </p>
           </div>
         )}
       </div>
@@ -248,9 +250,13 @@ export function LyricsModal({
       <div className="h-12 bg-neutral-950/80 border-t border-neutral-900 px-6 flex items-center justify-between text-[11px] text-neutral-500">
         <span className="flex items-center gap-1.5">
           <Sparkles className="w-3.5 h-3.5 text-[#1DB954]" />
-          <span>Pencét larik lirik mana waé pikeun langsung ngaluncatan pamuter musik</span>
+          <span>
+            {lang === 'en'
+              ? 'Click any lyric line to jump to that part of the song'
+              : 'Klik baris lirik mana saja untuk melompat langsung ke bagian lagu'}
+          </span>
         </span>
-        <span className="font-mono">{currentSong.genre || 'Sunda Pop'}</span>
+        <span className="font-mono">{currentSong.genre || 'Sound Kane & Hits'}</span>
       </div>
     </div>
   );

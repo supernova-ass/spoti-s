@@ -8,12 +8,11 @@ import {
   Plus,
   Heart,
   FileText,
-  CloudCheck,
   RefreshCw,
   Music,
   CheckCircle2,
 } from 'lucide-react';
-import { Playlist, Song } from '@/lib/types';
+import { Playlist } from '@/lib/types';
 import { Language, translations } from '@/lib/i18n';
 
 interface SidebarProps {
@@ -60,7 +59,7 @@ export function Sidebar({
               Spoti<span className="text-[#1DB954]">S</span>
             </span>
             <span className="text-[10px] font-semibold tracking-wider text-neutral-400 uppercase">
-              Pamuter Musik
+              {lang === 'en' ? 'Music Player' : 'Pemutar Musik'}
             </span>
           </div>
         </div>
@@ -147,7 +146,9 @@ export function Sidebar({
             </div>
             <div className="overflow-hidden">
               <div className="font-semibold text-sm truncate text-white">{t.likedSongs}</div>
-              <div className="text-xs text-neutral-400 truncate">{likedSongsCount} lagu</div>
+              <div className="text-xs text-neutral-400 truncate">
+                {likedSongsCount} {lang === 'en' ? 'songs' : 'lagu'}
+              </div>
             </div>
           </button>
         </div>
@@ -169,8 +170,7 @@ export function Sidebar({
                   alt={pl.title}
                   className="w-10 h-10 rounded-md object-cover shrink-0 bg-neutral-800"
                   onError={(e) => {
-                    // Fallback to placeholder if needed
-                    (e.target as HTMLImageElement).src = '/images/pop_sunda.jpg';
+                    (e.target as HTMLImageElement).src = '/images/sound_kane_cover.jpg';
                   }}
                 />
                 <div className="overflow-hidden flex-1">
@@ -178,7 +178,7 @@ export function Sidebar({
                     {pl.title}
                   </div>
                   <div className="text-xs text-neutral-400 truncate">
-                    {pl.isCustom ? 'Daptar Puter Anjeun' : 'Daptar Puter'} · {pl.tracks.length} lagu
+                    {pl.isCustom ? (lang === 'en' ? 'Your Playlist' : 'Playlist Anda') : 'Playlist'} · {pl.tracks.length} {lang === 'en' ? 'songs' : 'lagu'}
                   </div>
                 </div>
               </button>
